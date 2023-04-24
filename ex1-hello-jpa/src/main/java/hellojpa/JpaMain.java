@@ -14,7 +14,8 @@ public class JpaMain {
 
 //        getById(em);
 //        update(em);
-        jpql(em);
+//        jpql(em);
+        em_update(em);
         emf.close();
     }
 
@@ -85,6 +86,51 @@ public class JpaMain {
             for (Member member : result) {
                 System.out.println("member = " + member.getName());
             }
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+        } finally {
+            em.close();
+        }
+    }
+
+    private static void context(EntityManager em) {
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+//            // 비영속
+//            Member member = new Member();
+//            member.setId(100L);
+//            member.setName("HelloJPA");
+
+            // 영속
+//            em.persist(member);
+            Member findMember1 = em.find(Member.class, 100L); // DB
+            Member findMember2 = em.find(Member.class, 100L); // 1차 캐시
+
+            // 동일성 보장
+            System.out.println("result = " + (findMember1 == findMember2));
+
+
+            // sql 실행
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+        } finally {
+            em.close();
+        }
+    }
+
+    private static void em_update(EntityManager em) {
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Member member = em.find(Member.class, 100L);
+            member.setName("ZZZZZ");
+
+//            em.persist(member);
+
+            System.out.println("===============");
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
