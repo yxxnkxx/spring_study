@@ -24,8 +24,8 @@ public class JpaMain {
         tx.begin();
         try {
             Member member = new Member();
-            member.setId(1L);
-            member.setName("HelloA");
+//            member.setId(1L);
+//            member.setName("HelloA");
             em.persist(member);
             tx.commit();
         } catch (Exception e) {
@@ -40,8 +40,8 @@ public class JpaMain {
         tx.begin();
         try {
             Member findMember = em.find(Member.class, 1L);
-            System.out.println("findMember = " + findMember.getId());
-            System.out.println("findMember.getName() = " + findMember.getName());
+//            System.out.println("findMember = " + findMember.getId());
+//            System.out.println("findMember.getName() = " + findMember.getName());
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
@@ -69,7 +69,7 @@ public class JpaMain {
         tx.begin();
         try {
             Member findMember = em.find(Member.class, 1L);
-            findMember.setName("HelloJPA");
+//            findMember.setName("HelloJPA");
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
@@ -84,7 +84,7 @@ public class JpaMain {
         try {
             List<Member> result = em.createQuery("select m from Member m", Member.class).getResultList();
             for (Member member : result) {
-                System.out.println("member = " + member.getName());
+//                System.out.println("member = " + member.getName());
             }
             tx.commit();
         } catch (Exception e) {
@@ -126,7 +126,7 @@ public class JpaMain {
         tx.begin();
         try {
             Member member = em.find(Member.class, 100L);
-            member.setName("ZZZZZ");
+//            member.setName("ZZZZZ");
 
 //            em.persist(member);
 

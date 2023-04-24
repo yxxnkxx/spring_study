@@ -1,27 +1,19 @@
 package hellojpa;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
+@SequenceGenerator(name = "member_seq_generator", sequenceName = "member_seq")
 public class Member {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "member_seq_generator")
     private Long id;
-    private String name;
+    @Column(name = "name")
+    private String username;
 
-    public Long getId() {
-        return id;
+    public Member(){
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
