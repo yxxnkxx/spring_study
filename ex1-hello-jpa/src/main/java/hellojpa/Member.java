@@ -1,19 +1,40 @@
 package hellojpa;
 
+import lombok.Getter;
+
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @SequenceGenerator(name = "member_seq_generator", sequenceName = "member_seq")
+@Getter
 public class Member {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "member_seq_generator")
+    @GeneratedValue
+    @Column(name = "MEMBER_ID")
     private Long id;
-    @Column(name = "name")
+    @Column(name = "USERNAME")
     private String username;
+
+//    @Column(name = "TEAM_ID")
+//    private Long teamId;
+
+    @ManyToOne
+    @JoinColumn(name = "TEAM_ID")
+    private Team team;
 
     public Member(){
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void changeTeam(Team team) {
+        this.team = team;
+        team.getMembers().add(this);
+    }
 }
