@@ -16,7 +16,7 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try {
-            mappedSuperclass(em);
+            cascade(em);
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
@@ -24,6 +24,67 @@ public class JpaMain {
             em.close();
         }
         emf.close();
+    }
+
+    private static void cascade(EntityManager em) {
+
+        Child child1 = new Child();
+        Child child2 = new Child();
+
+        Parent parent = new Parent();
+        parent.addChild(child1);
+        parent.addChild(child2);
+
+        em.persist(parent);
+//        em.persist(child1);
+//        em.persist(child2);
+    }
+
+    private static void lazyLoading(EntityManager em) {
+        Team team = new Team();
+        team.setName("teamA");
+        em.persist(team);
+
+        Member member = new Member();
+        member.setUsername("member1");
+        member.setTeam(team);
+        em.persist(member);
+
+        em.flush();
+        em.clear();
+
+//        Member m = em.find(Member.class, member.getId());
+//        System.out.println("m = " + m.getTeam().getClass());
+        List<Member> members = em.createQuery("select m from Member m join fetch m.team", Member.class)
+                .getResultList();
+    }
+
+    private static void proxyBasic(EntityManager em) {
+        Member member = new Member();
+        member.setUsername("hello");
+        em.persist(member);
+
+        em.flush();
+        em.clear();
+
+        Member findMember = em.getReference(Member.class, member.getId()); // db 쿼리 X
+
+        System.out.println("findMember = " + findMember.getClass());
+        System.out.println("findMember = " + findMember.getId());
+        System.out.println("findMember = " + findMember.getUsername());
+    }
+
+    private static void printMember(Member member) {
+        String username = member.getUsername();
+        System.out.println("username = " + username);
+    }
+
+    private static void printMemberAndTeam(Member member) {
+        String username = member.getUsername();
+        System.out.println("username = " + username);
+
+        Team team = member.getTeam();
+        System.out.println("team = " + team.getName());
     }
 
     private static void mappedSuperclass(EntityManager em) {
