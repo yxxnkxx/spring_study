@@ -1,26 +1,28 @@
 package jpabook.jpashop.domain;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.time.LocalDateTime;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@NoArgsConstructor
 @Getter
 @Setter
-public class Item {
-    @Id @GeneratedValue
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn
+public abstract class Item extends BaseEntity {
+    @Id
+    @GeneratedValue
     @Column(name = "ITEM_ID")
     private Long id;
 
     private String name;
     private int price;
     private int stockQuantity;
+
+    @ManyToMany
+    private List<Category> categories = new ArrayList<>();
 
 }
