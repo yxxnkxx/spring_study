@@ -7,8 +7,9 @@ import javax.persistence.*;
 
 @Entity
 @SequenceGenerator(name = "member_seq_generator", sequenceName = "member_seq")
-@Getter @Setter
-public class Member extends BaseEntity{
+@Getter
+@Setter
+public class Member extends BaseEntity {
     @Id
     @GeneratedValue
     @Column(name = "MEMBER_ID")
@@ -21,7 +22,19 @@ public class Member extends BaseEntity{
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 
-    public Member(){
+    @Embedded
+    private Period workPeriod;
+    @Embedded
+    private Address homeAddress;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "city", column = @Column(name = "WORK_CITY")),
+            @AttributeOverride(name = "street", column = @Column(name = "WORK_STREET")),
+            @AttributeOverride(name = "zipcode", column = @Column(name = "WORK_ZIPCDE"))
+    })
+    private Address workAddress;
+
+    public Member() {
     }
 
     public void setId(Long id) {

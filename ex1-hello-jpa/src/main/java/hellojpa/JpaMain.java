@@ -16,7 +16,7 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try {
-            cascade(em);
+            embeddedChange(em);
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
@@ -24,6 +24,33 @@ public class JpaMain {
             em.close();
         }
         emf.close();
+    }
+
+    private static void embeddedChange(EntityManager em) {
+        Address address = new Address("city", "street", "10");
+
+        Member member1 = new Member();
+        member1.setUsername("member1");
+        member1.setHomeAddress(address);
+        em.persist(member1);
+
+        Address copyAddress = new Address(address.getCity(), address.getStreet(), address.getZipcode());
+
+
+        Member member2 = new Member();
+        member2.setUsername("member2");
+        member2.setHomeAddress(copyAddress);
+        em.persist(member2);
+
+        member1.getHomeAddress().setCity("newCity"); // member2도 변경
+    }
+
+    private static void embedded(EntityManager em) {
+        Member member = new Member();
+        member.setUsername("hello");
+        member.setHomeAddress(new Address("city", "street", "10"));
+        member.setWorkPeriod(new Period());
+        em.persist(member);
     }
 
     private static void cascade(EntityManager em) {
