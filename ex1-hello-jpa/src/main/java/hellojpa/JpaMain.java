@@ -16,7 +16,7 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try {
-            embeddedChange(em);
+            valueCollectionSave(em);
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
@@ -24,6 +24,36 @@ public class JpaMain {
             em.close();
         }
         emf.close();
+    }
+
+    private static void valueCollectionSave(EntityManager em) {
+        Member member = new Member();
+        member.setUsername("member1");
+        member.setHomeAddress(new Address("homeCity1", "street", "10000"));
+
+        member.getFavoriteFoods().add("치킨");
+        member.getFavoriteFoods().add("피자");
+        member.getFavoriteFoods().add("족발");
+
+        member.getAddressHistory().add(new Address("old1", "street", "10000"));
+        member.getAddressHistory().add(new Address("old2", "street", "10000"));
+
+        em.persist(member);
+
+        em.flush();
+        em.clear();
+
+        Member findMember = em.find(Member.class, member.getId());
+
+        List<Address> addressHistory = findMember.getAddressHistory();
+
+        // 치킨 -> 한식
+        findMember.getFavoriteFoods().remove("치킨");
+        findMember.getFavoriteFoods().add("한식");
+
+        findMember.getAddressHistory().remove(new Address("old1", "street", "10000")); // equals, hashcode 잘 정의해야 함
+        findMember.getAddressHistory().add(new Address("new1", "street", "10000"));
+
     }
 
     private static void embeddedChange(EntityManager em) {
@@ -42,7 +72,7 @@ public class JpaMain {
         member2.setHomeAddress(copyAddress);
         em.persist(member2);
 
-        member1.getHomeAddress().setCity("newCity"); // member2도 변경
+//        member1.getHomeAddress().setCity("newCity"); // member2도 변경
     }
 
     private static void embedded(EntityManager em) {
