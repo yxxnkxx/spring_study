@@ -1,5 +1,7 @@
 package hellojpa;
 
+import jpql.MemberDTO;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -16,7 +18,7 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try {
-            valueCollectionSave(em);
+            jpqlSubQuery(em);
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
@@ -24,6 +26,23 @@ public class JpaMain {
             em.close();
         }
         emf.close();
+    }
+
+    private static void jpqlSubQuery(EntityManager em) {
+        List resultList = em.createQuery("select d from (select m.age from Member m) d").getResultList();
+//        List resultList = em.createQuery("select m.team from Member m").getResultList();
+        for (Object o : resultList) {
+            System.out.println(o);
+        }
+    }
+
+    private static void jpqlDTO(EntityManager em) {
+        List<MemberDTO> resultList = em.createQuery("select new jpql.MemberDTO(m.username, m.age) from Member m", MemberDTO.class).getResultList();
+    }
+
+    private static void jpqlSelect(EntityManager em) {
+        List<Member> members = em.createQuery("select m from Member m where m.username like '%kim%'", Member.class)
+                .getResultList();
     }
 
     private static void valueCollectionSave(EntityManager em) {

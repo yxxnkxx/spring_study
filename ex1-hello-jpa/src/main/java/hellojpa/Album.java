@@ -5,7 +5,8 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 
-@Entity @Getter
+//@Entity
+@Getter
 @Setter
 public class Album extends Item{
     private String artist;
