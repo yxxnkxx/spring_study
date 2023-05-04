@@ -1,7 +1,7 @@
 package jpql;
 
-import hellojpa.Member;
-import hellojpa.Team;
+import jpql.Member;
+import jpql.Team;
 import hellojpa.*;
 
 import javax.persistence.EntityManager;
@@ -20,6 +20,33 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try {
+            Member member = new Member();
+            member.setId(1L);
+            member.setUsername("멤버1");
+            em.persist(member);
+
+            Team team = new Team();
+            team.setId(2L);
+            team.setName("팀1");
+            em.persist(team);
+//            team.getMembers().add(member);
+            member.setTeam(team);
+
+            Team team1 = em.find(Team.class, 2L);
+            System.out.println(team1.getMembers().size());
+
+
+            em.flush();
+            em.clear();
+
+            Member member1 = em.find(Member.class, 1L);
+            System.out.println(member1.getUsername());
+
+
+
+
+
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();

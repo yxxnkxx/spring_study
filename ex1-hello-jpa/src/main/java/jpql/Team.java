@@ -15,7 +15,6 @@ import java.util.List;
 @Setter
 public class Team {
     @Id
-    @GeneratedValue
     private Long id;
     private String name;
 

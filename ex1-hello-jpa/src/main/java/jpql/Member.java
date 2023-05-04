@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter @Setter
 public class Member {
 
-    @Id @GeneratedValue
+    @Id
     private Long id;
     private String username;
     private int age;
